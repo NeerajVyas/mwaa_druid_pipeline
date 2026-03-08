@@ -1,0 +1,12 @@
+time="2026-03-08T12:46:24Z" level=info msg="create process:rpk_status"
+time="2026-03-08T12:46:24Z" level=info msg="stop listening"
+time="2026-03-08T12:46:24Z" level=info msg="try to start program" program=rpk_status
+time="2026-03-08T12:46:25Z" level=info msg="success to start program" program=rpk_status
+time="2026-03-08T12:58:33Z" level=info msg="create process:rpk_status"
+time="2026-03-08T12:58:33Z" level=info msg="stop listening"
+time="2026-03-08T12:58:33Z" level=info msg="try to start program" program=rpk_status
+time="2026-03-08T12:58:34Z" level=info msg="success to start program" program=rpk_status
+time="2026-03-08T13:02:47Z" level=info msg="create process:rpk_status"
+time="2026-03-08T13:02:47Z" level=info msg="stop listening"
+time="2026-03-08T13:02:47Z" level=info msg="try to start program" program=rpk_status
+time="2026-03-08T13:02:48Z" level=info msg="success to start program" program=rpk_status

@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  # Open Source S3 Alternative
+  minio:
+    image: quay.io/minio/minio
+    ports: ["9000:9000", "9001:9001"]
+    volumes: ["./data/minio:/data"]
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+
+  # Lightweight Kafka Alternative (Excellent for M1 Max)
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.2.1
+    ports: ["9092:9092"]
+    volumes: ["./data/redpanda:/var/lib/redpanda/data"]
+    command: ["redpanda", "start", "--overprovisioned", "--smp", "1", "--memory", "1G", "--kafka-addr", "PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092", "--advertise-kafka-addr", "PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092"]
+
+  postgres:
+    image: postgres:13
+    environment: [POSTGRES_USER=airflow, POSTGRES_PASSWORD=airflow, POSTGRES_DB=airflow]
+
+  airflow-webserver:
+    build: .
+    platform: linux/arm64
+    depends_on: [postgres, minio, redpanda]
+    environment:
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    volumes:
+      - ./dags:/opt/airflow/dags
+    ports: ["8082:8080"]
+    command: bash -c "
+      airflow db migrate && 
+      airflow users create --username admin --firstname admin --lastname user --role Admin --email admin@example.com --password admin && 
+      (airflow scheduler & airflow webserver)
+      "
